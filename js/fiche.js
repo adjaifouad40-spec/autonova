@@ -103,7 +103,6 @@ function render(v) {
   const grid = el("div", "container fiche-top");
   const summary = el("aside", "panel fiche-summary");
   summary.append(el("p", "fiche-price", formatPriceOrAsk(v.price)));
-  if (v.price) summary.append(el("p", "car-month", `ou environ ${formatPrice(monthlyEstimate(v.price))} / mois*`));
 
   const figures = el("div", "key-figures");
   KEY_FIGURES.forEach((label) => {
@@ -123,12 +122,9 @@ function render(v) {
   const actions = el("div", "fiche-actions");
   const trial = el("a", "btn", "Réserver un essai"); trial.href = `inscription.html?modele=${encodeURIComponent(v.name)}`;
   actions.append(trial);
-  if (v.price) {
-    const fin = el("a", "btn btn-dark", "Simuler le financement"); fin.href = `financement.html?prix=${v.price}`;
-    actions.append(fin);
-  }
+  const sell = el("a", "btn btn-outline", "Poser une question"); sell.href = "contact.html";
+  actions.append(sell);
   summary.append(actions);
-  if (v.price) summary.append(el("p", "disclaimer", "* Mensualité indicative sur 60 mois avec 10 % d'apport et un taux de 4,9 %."));
   if (v.local) summary.append(el("p", "disclaimer", "Fiche ajoutée depuis l'Espace vendeur : visible uniquement dans ce navigateur."));
 
   grid.append(buildGallery(v), summary);
@@ -162,12 +158,6 @@ function notFound() {
   c.append(a);
   s.append(c);
   root.replaceChildren(s);
-}
-
-// Mensualité indicative (même calcul que le catalogue)
-function monthlyEstimate(price) {
-  const loan = price * 0.9, r = 0.049 / 12, n = 60;
-  return (loan * r) / (1 - Math.pow(1 + r, -n));
 }
 
 const id = new URLSearchParams(window.location.search).get("id");

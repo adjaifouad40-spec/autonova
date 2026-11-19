@@ -504,3 +504,13 @@ details p { color: var(--muted); margin: 12px 0 0; max-width: 680px; }
   .hero-meta .meta-left { display: none; }
   .hero-meta .meta-right { width: 100%; justify-content: space-between; gap: 16px; }
 }
+
+/* ---------- Vendre ma voiture ---------- */
+.sell-layout { display: grid; grid-template-columns: 1fr 320px; gap: 48px; align-items: start; }
+.sell-form { display: grid; gap: 20px; }
+.sell-form > h2 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; letter-spacing: -0.03em; }
+.sell-aside { position: sticky; top: 96px; }
+.field-label { font-size: .7rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); }
+.choice-row { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+@media (max-width: 1020px) { .sell-layout { grid-template-columns: 1fr; } .sell-aside { position: static; } }
+.form-section { min-width: 0; } .sell-layout > *, .vendor > * { min-width: 0; } .field input[type="file"] { max-width: 100%; }

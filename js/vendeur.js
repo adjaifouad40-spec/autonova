@@ -25,6 +25,7 @@ const MAX_VIDEO_MB = 150;
 let photos = [];      // fichiers image choisis
 let video = null;     // fichier vidéo choisi
 let editingId = null; // id de la fiche en cours de modification
+let fromRequestId = null; // demande de vente à l'origine de la fiche
 
 // ---------- Construction des champs à partir des listes de vehicules.js ----------
 function inputField(f, prefix) {
@@ -282,8 +283,13 @@ form.addEventListener("submit", async (e) => {
   link.textContent = "Voir la fiche →";
   status.append(link);
   status.classList.add("is-ok");
+  if (fromRequestId) {
+    const req = (await getSellRequests()).find((r) => r.id === fromRequestId);
+    if (req) await saveSellRequest({ ...req, status: "publiée", vehicleId: vehicle.id });
+  }
   resetForm(false);
   renderList();
+  renderRequests();
 });
 
 function resetForm(clearStatus = true) {
@@ -292,6 +298,7 @@ function resetForm(clearStatus = true) {
   photos = [];
   video = null;
   editingId = null;
+  fromRequestId = null;
   form.querySelectorAll(".invalid").forEach((w) => w.classList.remove("invalid"));
   form.querySelectorAll(".error").forEach((e) => (e.textContent = ""));
   document.getElementById("submit-btn").textContent = "Enregistrer la fiche";
@@ -392,8 +399,94 @@ async function renderList() {
   });
 }
 
+// ---------- Demandes « Vendre ma voiture » ----------
+const CATEGORY_MAP = { "Citadine": "citadine", "Berline": "berline", "SUV / 4x4": "suv", "Électrique": "electrique" };
+
+function fillFromRequest(r) {
+  resetForm();
+  fromRequestId = r.id;
+  const c = r.car;
+  form.condition.value = "occasion";
+  updateCondition();
+  form.vehicleName.value = [c.marque, c.modele, c.version].filter(Boolean).join(" ");
+  form.brand.value = c.marque;
+  form.category.value = CATEGORY_MAP[c.categorie] || (c.energie === "Électrique" ? "electrique" : "");
+  form.energy.value = ["Essence", "Diesel", "Hybride", "Électrique"].includes(c.energie) ? c.energie : "";
+  form.price.value = c.prix || "";
+  const set = (key, value) => { const i = form.querySelector(`[name='${key}']`); if (i && value) i.value = value; };
+  set("annee", c.annee); set("kilometrage", c.km); set("proprietaires", c.proprietaires);
+  set("entretien", c.entretien && `Carnet ${c.entretien.toLowerCase()}`); set("controle", c.controle); set("etat", c.etat);
+  set("boite", c.boite); set("cylindree", c.cylindree); set("puissance", c.puissance);
+  set("carrosserie", c.portes); set("consommation", c.consommation); set("moteur", c.version);
+  if (c.couleur) addExtraRow("Couleur", c.couleur);
+  addExtraRow("Accident", c.accident === "oui" ? `Oui${c.accidentDetails ? " : " + c.accidentDetails : ""}` : "Aucun déclaré");
+  if (c.options) addExtraRow("Équipements", c.options);
+  if (c.documents.length) addExtraRow("Documents", c.documents.join(", "));
+  photos = [...(r.photos || [])];
+  renderMedia();
+  document.getElementById("form-title").textContent = `Fiche à partir de la demande de ${r.seller.prenom} ${r.seller.nom}`;
+  status.className = "form-status";
+  status.textContent = "Vérifie les informations, complète la fiche technique si besoin, puis enregistre.";
+  form.scrollIntoView({ behavior: "smooth" });
+}
+
+async function renderRequests() {
+  const box = document.getElementById("sell-requests");
+  if (!box) return;
+  const list = (await getSellRequests()).sort((a, b) => b.createdAt - a.createdAt);
+  document.getElementById("req-count").textContent = list.length ? `(${list.length})` : "";
+  box.replaceChildren();
+  if (!list.length) {
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "Aucune demande pour l'instant.";
+    box.append(p);
+    return;
+  }
+  list.forEach((r) => {
+    const c = r.car, who = r.seller;
+    const item = document.createElement("article");
+    item.className = "my-vehicle";
+    const img = document.createElement("img");
+    img.src = r.photos && r.photos[0] ? URL.createObjectURL(r.photos[0]) : "images/suv-gris.svg";
+    img.alt = "";
+    const info = document.createElement("div");
+    const h3 = document.createElement("h3");
+    h3.textContent = `${c.marque} ${c.modele}${c.version ? " " + c.version : ""} · ${c.annee}`;
+    const line1 = document.createElement("p");
+    const badge = document.createElement("span");
+    badge.className = "condition-badge small " + (r.status === "publiée" ? "is-new" : "is-used");
+    badge.textContent = r.status === "publiée" ? "Fiche créée" : "Nouvelle";
+    line1.append(badge, ` ${c.km.toLocaleString("fr-FR")} km · ${c.energie} · ${c.boite} · ${formatPrice(c.prix)}${c.negociable ? " (négociable)" : ""}`);
+    const line2 = document.createElement("p");
+    line2.textContent = `${who.prenom} ${who.nom} · ${who.tel}${who.email ? " · " + who.email : ""} · ${who.ville} · ${r.photos.length} photo(s) · reçue le ${new Date(r.createdAt).toLocaleDateString("fr-FR")}`;
+    info.append(h3, line1, line2);
+
+    const actions = document.createElement("div");
+    actions.className = "my-actions";
+    const create = document.createElement("button");
+    create.type = "button";
+    create.textContent = r.status === "publiée" ? "Recréer la fiche" : "Créer la fiche";
+    create.addEventListener("click", () => fillFromRequest(r));
+    const call = document.createElement("a");
+    call.href = `tel:${who.tel.replace(/\s/g, "")}`;
+    call.textContent = "Appeler";
+    const del = document.createElement("button");
+    del.type = "button"; del.textContent = "Supprimer"; del.className = "danger";
+    del.addEventListener("click", async () => {
+      if (!confirm(`Supprimer la demande de ${who.prenom} ${who.nom} ?`)) return;
+      await deleteSellRequest(r.id);
+      renderRequests();
+    });
+    actions.append(create, call, del);
+    item.append(img, info, actions);
+    box.append(item);
+  });
+}
+
 updateCondition();
 renderList();
+renderRequests();
 
 // Efface l'erreur d'un champ dès qu'on le corrige
 form.addEventListener("input", (e) => {

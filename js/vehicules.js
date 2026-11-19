@@ -170,22 +170,27 @@ const STATIC_VEHICLES = [
 // ---------------------------------------------------------
 const DB_NAME = "autonova";
 const STORE = "vehicules";
+const REQUESTS = "demandes"; // demandes « Vendre ma voiture »
 
 function openDB() {
   return new Promise((resolve, reject) => {
     if (!("indexedDB" in window)) return reject(new Error("IndexedDB indisponible"));
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = () => req.result.createObjectStore(STORE, { keyPath: "id" });
+    const req = indexedDB.open(DB_NAME, 2);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: "id" });
+      if (!db.objectStoreNames.contains(REQUESTS)) db.createObjectStore(REQUESTS, { keyPath: "id" });
+    };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
 
-async function dbRequest(mode, action) {
+async function dbRequest(mode, action, store = STORE) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, mode);
-    const req = action(tx.objectStore(STORE));
+    const tx = db.transaction(store, mode);
+    const req = action(tx.objectStore(store));
     tx.oncomplete = () => resolve(req && req.result);
     tx.onerror = () => reject(tx.error);
     tx.onabort = () => reject(tx.error);
@@ -195,6 +200,10 @@ async function dbRequest(mode, action) {
 const getLocalVehicles = () => dbRequest("readonly", (s) => s.getAll()).then((r) => r || []).catch(() => []);
 const saveLocalVehicle = (v) => dbRequest("readwrite", (s) => s.put(v));
 const deleteLocalVehicle = (id) => dbRequest("readwrite", (s) => s.delete(id));
+
+const getSellRequests = () => dbRequest("readonly", (s) => s.getAll(), REQUESTS).then((r) => r || []).catch(() => []);
+const saveSellRequest = (r) => dbRequest("readwrite", (s) => s.put(r), REQUESTS);
+const deleteSellRequest = (id) => dbRequest("readwrite", (s) => s.delete(id), REQUESTS);
 
 async function getAllVehicles() {
   const local = await getLocalVehicles();

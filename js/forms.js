@@ -10,6 +10,10 @@ const validators = {
   phone: (v) => v === "" || /^[+0-9 ().-]{8,20}$/.test(v) || "Numéro de téléphone invalide.",
   min: (v, n) => v.trim().length >= Number(n) || `Au moins ${n} caractères.`,
   checked: (v, n, field) => field.checked || "Tu dois accepter pour continuer.",
+  choice: (v, n, field) => Boolean(field.form.querySelector(`[name="${field.name}"]:checked`)) || "Choisis une réponse.",
+  year: (v) => v === "" || (Number(v) >= 1980 && Number(v) <= new Date().getFullYear()) || `Année entre 1980 et ${new Date().getFullYear()}.`,
+  km: (v) => v === "" || (Number(v) >= 0 && Number(v) <= 1000000) || "Kilométrage invalide.",
+  price: (v) => v === "" || Number(v) >= 100000 || "Indique un prix d'au moins 100 000 F CFA.",
 };
 
 function validateField(field) {

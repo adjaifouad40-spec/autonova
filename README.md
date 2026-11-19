@@ -12,7 +12,7 @@ Projet de fin de formation (Lab Phase « Marketing Website ») — GOMYCODE, *In
 |---|---|---|
 | Accueil | `index.html` | Grande image, présentation d'AutoNova, chiffres clés, cartes vers chaque page de fonctionnalité, étapes d'achat |
 | Catalogue | `catalogue.html` | 8 véhicules, filtres par type, état et budget, tri, mensualité indicative, bouton « Réserver un essai » |
-| Financement | `financement.html` | Simulateur de crédit (apport, durée, taux), prix en francs CFA, coût total, tableau des formules |
+| Vendre ma voiture | `vendre.html` | Formulaire pour les particuliers qui veulent vendre leur voiture : marque, modèle, année, kilométrage, énergie, boîte, état, historique, accident, options, prix souhaité, documents, photos et coordonnées. Les demandes arrivent dans l'Espace vendeur |
 | Reprise | `reprise.html` | Estimation de reprise selon la catégorie, l'année, le kilométrage et l'état, avec validation |
 | Garantie & livraison | `garantie-livraison.html` | Contrôle en 120 points, tableau des garanties, étapes de livraison, FAQ |
 | Inscription | `inscription.html` | Landing page avec offre de bienvenue et formulaire d'inscription validé en JavaScript |
@@ -22,7 +22,7 @@ Projet de fin de formation (Lab Phase « Marketing Website ») — GOMYCODE, *In
 
 ## ✅ Les 3 phases du projet
 
-1. **Squelette du site** : une page d'accueil avec photographie et vue d'ensemble, et des pages de fonctionnalités liées depuis l'accueil (Catalogue, Financement, Reprise, Garantie & livraison).
+1. **Squelette du site** : une page d'accueil avec photographie et vue d'ensemble, et des pages de fonctionnalités liées depuis l'accueil (Catalogue, Vendre ma voiture, Reprise, Garantie & livraison).
 2. **Page d'inscription** : une landing page qui pousse à s'inscrire avec un formulaire (`inscription.html`).
 3. **Composant Contact** : une page de contact avec formulaire. Un bandeau d'appel à l'action « Contactez-nous » figure **en bas de toutes les pages sauf la page Contact**.
 
@@ -37,7 +37,7 @@ Projet de fin de formation (Lab Phase « Marketing Website ») — GOMYCODE, *In
 - Menu mobile (bouton ☰), et apparition des sections au défilement (`IntersectionObserver`)
 - Catalogue généré à partir d'un tableau de données, avec filtres et tri en direct
 - Filtres et formulaires pré-remplis par l'URL : `catalogue.html?type=suv`, `inscription.html?modele=Nova%20Trek`
-- Simulateur de crédit : `mensualité = C × t / (1 − (1 + t)^−n)`
+- « Vendre ma voiture » : demande validée champ par champ, avec photos, puis visible dans l'Espace vendeur. « Créer la fiche » pré-remplit une fiche d'occasion
 - Estimation de reprise avec décote selon l'âge, le kilométrage et l'état
 - Validation des formulaires avec des règles déclarées dans le HTML (`data-rules="required email"`), messages sous chaque champ, puis confirmation
 
@@ -50,7 +50,7 @@ cd autonova
 
 ## 🗂️ Structure
 ```
-index.html, catalogue.html, financement.html, reprise.html,
+index.html, catalogue.html, vendre.html, reprise.html,
 garantie-livraison.html, inscription.html, contact.html,
 vehicule.html, espace-vendeur.html
 css/style.css        styles communs (variables, grilles, responsive)
@@ -59,7 +59,8 @@ js/vehicules.js      données des véhicules, thèmes, stockage IndexedDB, lectu
 js/catalogue.js      filtres et tri du catalogue
 js/fiche.js          page fiche véhicule
 js/vendeur.js        Espace vendeur
-js/financement.js    simulateur de crédit
+js/vendre.js         formulaire « Vendre ma voiture »
+js/accueil.js        sélection de voitures de l'accueil
 js/reprise.js        estimation de reprise
 js/forms.js          validation des formulaires
 images/              illustrations SVG
