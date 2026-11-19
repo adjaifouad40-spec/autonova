@@ -9,7 +9,7 @@ const result = document.getElementById("tradein-result");
 const resultValue = document.getElementById("tradein-value");
 const resultRange = document.getElementById("tradein-range");
 
-const baseValues = { citadine: 16000, berline: 26000, suv: 32000, electrique: 34000 };
+const baseValues = { citadine: 10500000, berline: 17050000, suv: 21000000, electrique: 22300000 }; // en F CFA
 const conditionFactor = { excellent: 1, bon: 0.9, moyen: 0.75 };
 
 function estimate({ category, year, km, condition }) {
@@ -18,7 +18,7 @@ function estimate({ category, year, km, condition }) {
   value *= Math.pow(0.85, age);               // −15 % par an
   value *= Math.max(0.35, 1 - km / 300000);   // décote liée au kilométrage
   value *= conditionFactor[condition];
-  return Math.max(500, Math.round(value / 100) * 100);
+  return Math.max(300000, Math.round(value / 50000) * 50000);
 }
 
 function showError(field, message) {

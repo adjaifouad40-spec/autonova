@@ -12,7 +12,7 @@ Projet de fin de formation (Lab Phase « Marketing Website ») — GOMYCODE, *In
 |---|---|---|
 | Accueil | `index.html` | Grande image, présentation d'AutoNova, chiffres clés, cartes vers chaque page de fonctionnalité, étapes d'achat |
 | Catalogue | `catalogue.html` | 8 véhicules, filtres par type, état et budget, tri, mensualité indicative, bouton « Réserver un essai » |
-| Financement | `financement.html` | Simulateur de crédit (apport, durée, taux), coût total, tableau des formules |
+| Financement | `financement.html` | Simulateur de crédit (apport, durée, taux), prix en francs CFA, coût total, tableau des formules |
 | Reprise | `reprise.html` | Estimation de reprise selon la catégorie, l'année, le kilométrage et l'état, avec validation |
 | Garantie & livraison | `garantie-livraison.html` | Contrôle en 120 points, tableau des garanties, étapes de livraison, FAQ |
 | Inscription | `inscription.html` | Landing page avec offre de bienvenue et formulaire d'inscription validé en JavaScript |

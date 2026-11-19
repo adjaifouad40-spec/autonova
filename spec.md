@@ -8,7 +8,7 @@ Site de marketing pour le lancement d'AutoNova, une concession de voitures 100 %
 |---|---|
 | Accueil avec photographie et vue d'ensemble | `index.html` : héros avec image, chiffres clés, « Comment ça marche » |
 | Pages de fonctionnalités liées depuis l'accueil | 4 cartes vers `catalogue`, `financement`, `reprise` et `garantie-livraison` |
-| Landing page d'inscription avec formulaire | `inscription.html` : offre de 500 €, avantages, formulaire validé |
+| Landing page d'inscription avec formulaire | `inscription.html` : offre de 300 000 F CFA, avantages, formulaire validé |
 | Page Contact avec formulaire | `contact.html` |
 | Lien d'appel à l'action vers Contact en bas de chaque page, sauf Contact | Bandeau `.cta-band` sur 6 pages, absent de `contact.html` |
 
@@ -39,7 +39,7 @@ Le catalogue compte 8 véhicules. Les types sont `citadine`, `berline`, `suv` et
 ## 6. Fonctions JavaScript principales
 | Fichier | Fonction | Rôle |
 |---|---|---|
-| `main.js` | `formatPrice(v)` | Formate un prix en euros (`Intl.NumberFormat`) |
+| `main.js` | `formatPrice(v)` | Formate un prix en francs CFA (XOF) (`Intl.NumberFormat`) |
 | `catalogue.js` | `createCarCard(car)` | Construit une carte véhicule (`createElement` et `textContent`) |
 | `catalogue.js` | `render()` | Applique les filtres type, état et budget et le tri, puis met à jour le compteur |
 | `catalogue.js` | `monthlyEstimate(price)` | Mensualité indicative (60 mois, 10 % d'apport, 4,9 %) |
@@ -58,7 +58,7 @@ Le catalogue compte 8 véhicules. Les types sont `citadine`, `berline`, `suv` et
 | Contact | Prénom, e-mail, sujet, message | obligatoires (message : 10 caractères minimum) |
 | Reprise | Année | entre 1995 et l'année en cours |
 | Reprise | Kilométrage | entre 0 et 500 000 km |
-| Financement | Prix | entre 1 000 € et 200 000 € |
+| Financement | Prix | entre 500 000 et 200 000 000 F CFA |
 
 ## 8. Responsive
 Les points de rupture sont 900 px (colonnes empilées), 760 px (menu mobile, formulaires sur une colonne) et 480 px (boutons pleine largeur). Les grilles utilisent `repeat(auto-fit, minmax(250px, 1fr))`.

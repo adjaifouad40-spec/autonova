@@ -113,7 +113,7 @@ if (params.get("type") && typeLabels[params.get("type")]) typeSelect.value = par
 getAllVehicles().then((list) => {
   cars = list;
   // Le curseur de budget s'adapte au véhicule le plus cher
-  const maxPrice = Math.max(40000, ...cars.map((c) => c.price || 0));
+  const maxPrice = Math.max(10000000, ...cars.map((c) => c.price || 0));
   const step = maxPrice > 200000 ? 100000 : 500;
   priceRange.max = Math.ceil(maxPrice / step) * step;
   priceRange.min = 0;

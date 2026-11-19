@@ -37,8 +37,8 @@ function update() {
   out.durationLabel.textContent = `${months} mois`;
   out.rateLabel.textContent = `${rate.toFixed(1).replace(".", ",")} %`;
 
-  if (!price || price < 1000 || price > 200000) {
-    out.error.textContent = "Saisissez un prix entre 1 000 € et 200 000 €.";
+  if (!price || price < 500000 || price > 200000000) {
+    out.error.textContent = "Saisissez un prix entre 500 000 et 200 000 000 F CFA.";
     priceInput.parentElement.classList.add("invalid");
     return;
   }

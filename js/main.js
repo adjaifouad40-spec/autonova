@@ -38,4 +38,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Formatage commun des prix (utilisé par les autres scripts)
 const formatPrice = (value) =>
-  new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+  new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(value);
