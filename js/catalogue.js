@@ -38,7 +38,7 @@ function render() {
   if (list.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty";
-    empty.textContent = "Aucun véhicule ne correspond à ces critères. Essayez d'augmenter le budget.";
+    empty.textContent = "Aucune voiture ne correspond à ces critères. Essaie d'augmenter le budget.";
     grid.replaceChildren(empty);
   } else {
     grid.replaceChildren(...list.map(renderCarCard));

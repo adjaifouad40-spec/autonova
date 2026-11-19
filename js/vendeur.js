@@ -160,7 +160,7 @@ document.getElementById("import-btn").addEventListener("click", () => {
   const msg = document.getElementById("import-status");
   const parsed = parseSpecSheet(text);
   if (!parsed.name && !parsed.specs.length) {
-    msg.textContent = "Rien à lire : collez le nom du véhicule puis une caractéristique par ligne.";
+    msg.textContent = "Rien à lire : colle le nom du véhicule puis une caractéristique par ligne.";
     msg.className = "import-status is-error";
     return;
   }
@@ -184,7 +184,7 @@ document.getElementById("import-btn").addEventListener("click", () => {
 
   msg.textContent = `${recognised} caractéristique${recognised > 1 ? "s" : ""} placée${recognised > 1 ? "s" : ""} dans le formulaire` +
     (extras.length ? `, ${extras.length} ajoutée${extras.length > 1 ? "s" : ""} dans « Autres caractéristiques ».` : ".") +
-    " Vérifiez, choisissez Neuf ou Occasion et ajoutez vos photos.";
+    " Vérifie, choisis Neuf ou Occasion et ajoute tes photos.";
   msg.className = "import-status is-ok";
   form.scrollIntoView({ behavior: "smooth" });
 });
@@ -203,13 +203,13 @@ function validate() {
   const year = Number(form.annee.value);
   const now = new Date().getFullYear();
   const checks = [
-    setError("vehicleName", form.vehicleName.value.trim().length < 3 ? "Indiquez le nom complet du véhicule." : ""),
-    setError("category", form.category.value ? "" : "Choisissez une catégorie."),
+    setError("vehicleName", form.vehicleName.value.trim().length < 3 ? "Indique le nom complet du véhicule." : ""),
+    setError("category", form.category.value ? "" : "Choisis une catégorie."),
     setError("price", form.price.value && Number(form.price.value) < 0 ? "Prix invalide." : ""),
   ];
   if (!isNew) {
     checks.push(setError("annee", !year || year < 1980 || year > now ? `Année entre 1980 et ${now}.` : ""));
-    checks.push(setError("kilometrage", form.kilometrage.value === "" ? "Indiquez le kilométrage." : ""));
+    checks.push(setError("kilometrage", form.kilometrage.value === "" ? "Indique le kilométrage." : ""));
   }
   return checks.every(Boolean);
 }
@@ -262,7 +262,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   status.className = "form-status";
   if (!validate()) {
-    status.textContent = "Corrigez les champs en rouge.";
+    status.textContent = "Corrige les champs en rouge.";
     status.classList.add("is-error");
     form.querySelector(".invalid input, .invalid select")?.focus();
     return;
@@ -272,7 +272,7 @@ form.addEventListener("submit", async (e) => {
   try {
     await saveLocalVehicle(vehicle);
   } catch (err) {
-    status.textContent = "Enregistrement impossible : l'espace de stockage du navigateur est peut-être plein (vidéo trop lourde ?).";
+    status.textContent = "Enregistrement impossible : l'espace de stockage de ton navigateur est peut-être plein (vidéo trop lourde ?).";
     status.classList.add("is-error");
     return;
   }
@@ -347,7 +347,7 @@ async function renderList() {
   if (!local.length) {
     const p = document.createElement("p");
     p.className = "empty";
-    p.textContent = "Aucune fiche pour l'instant. Remplissez le formulaire ci-dessus.";
+    p.textContent = "Aucune fiche pour l'instant. Remplis le formulaire ci-dessus.";
     listEl.append(p);
     return;
   }

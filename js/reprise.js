@@ -36,7 +36,7 @@ form.addEventListener("submit", (event) => {
   const condition = form.condition.value;
   let valid = true;
 
-  showError(form.category, category ? "" : "Choisissez une catégorie.");
+  showError(form.category, category ? "" : "Choisis une catégorie.");
   if (!category) valid = false;
 
   if (!year || year < 1995 || year > currentYear) {

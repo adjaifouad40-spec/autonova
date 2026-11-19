@@ -38,7 +38,7 @@ function update() {
   out.rateLabel.textContent = `${rate.toFixed(1).replace(".", ",")} %`;
 
   if (!price || price < 500000 || price > 200000000) {
-    out.error.textContent = "Saisissez un prix entre 500 000 et 200 000 000 F CFA.";
+    out.error.textContent = "Saisis un prix entre 500 000 et 200 000 000 F CFA.";
     priceInput.parentElement.classList.add("invalid");
     return;
   }

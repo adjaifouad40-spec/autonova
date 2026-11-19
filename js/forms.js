@@ -9,7 +9,7 @@ const validators = {
   email: (v) => v === "" || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || "Adresse e-mail invalide.",
   phone: (v) => v === "" || /^[+0-9 ().-]{8,20}$/.test(v) || "Numéro de téléphone invalide.",
   min: (v, n) => v.trim().length >= Number(n) || `Au moins ${n} caractères.`,
-  checked: (v, n, field) => field.checked || "Vous devez accepter pour continuer.",
+  checked: (v, n, field) => field.checked || "Tu dois accepter pour continuer.",
 };
 
 function validateField(field) {
