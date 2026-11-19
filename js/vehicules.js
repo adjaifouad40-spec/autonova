@@ -35,11 +35,11 @@ const SPEC_FIELDS = [
 
 // Les thèmes de la fiche, dans l'ordre d'affichage
 const SPEC_GROUPS = [
-  { id: "moteur", title: "Moteur et performances", icon: "⚙️" },
-  { id: "transmission", title: "Boîte et transmission", icon: "🕹️" },
-  { id: "conso", title: "Consommation et autonomie", icon: "⛽", extra: ["autonomie", "batterie", "recharge"] },
-  { id: "carrosserie", title: "Carrosserie et dimensions", icon: "📏", extra: ["places", "portes", "coffre", "poids"] },
-  { id: "chassis", title: "Châssis, roues et freinage", icon: "🛞" },
+  { id: "moteur", title: "Moteur et performances", icon: "01" },
+  { id: "transmission", title: "Boîte et transmission", icon: "02" },
+  { id: "conso", title: "Consommation et autonomie", icon: "03", extra: ["autonomie", "batterie", "recharge"] },
+  { id: "carrosserie", title: "Carrosserie et dimensions", icon: "04", extra: ["places", "portes", "coffre", "poids"] },
+  { id: "chassis", title: "Châssis, roues et freinage", icon: "05" },
 ];
 
 // Chiffres mis en avant en haut de la fiche
@@ -48,7 +48,7 @@ const KEY_FIGURES = ["Puissance", "0–100 km/h", "Consommation mixte", "Boîte"
 // Range une liste [libellé, valeur] par thème. Les libellés inconnus vont dans « Autres ».
 function groupSpecs(specs) {
   const groups = SPEC_GROUPS.map((g) => ({ ...g, rows: [] }));
-  const others = { id: "autres", title: "Autres caractéristiques", icon: "📋", rows: [] };
+  const others = { id: "autres", title: "Autres caractéristiques", icon: "06", rows: [] };
   for (const [label, value] of specs) {
     const field = SPEC_FIELDS.find((f) => normalize(f.label) === normalize(label));
     let target = field && groups.find((g) => g.id === field.group);
@@ -273,4 +273,75 @@ function guessEnergy(text) {
   if (/diesel|gasoil/.test(t)) return "Diesel";
   if (/essence|turbo|tsi|tfsi/.test(t)) return "Essence";
   return "";
+}
+
+// ---------------------------------------------------------
+//  Carte produit (accueil + catalogue)
+// ---------------------------------------------------------
+const USAGE_LABELS = { citadine: "Ville", berline: "Route", suv: "Famille", electrique: "Zéro émission" };
+
+function carCategory(v) {
+  return `${TYPE_LABELS[v.type] || "Véhicule"} — ${USAGE_LABELS[v.type] || (v.isNew ? "Neuf" : "Occasion")}`;
+}
+
+// Petite description à partir de la fiche : puissance · boîte · énergie / km
+function carDesc(v) {
+  const get = (label) => ((v.specs || []).find(([l]) => l === label) || [])[1];
+  const power = get("Puissance");
+  const gearbox = (get("Boîte") || "").split(" ")[0];
+  const parts = [power && power.split(" (")[0], gearbox && gearbox.toLowerCase(), v.isNew ? v.energy?.toLowerCase() : `${v.year} · ${v.km.toLocaleString("fr-FR")} km`];
+  return parts.filter(Boolean).join(" · ");
+}
+
+function renderCarCard(car) {
+  const url = `vehicule.html?id=${encodeURIComponent(car.id)}`;
+  const article = document.createElement("article");
+  article.className = "car-card";
+
+  const photo = document.createElement("a");
+  photo.className = "car-photo";
+  photo.href = url;
+  photo.tabIndex = -1;
+  photo.setAttribute("aria-hidden", "true");
+  const img = document.createElement("img");
+  img.src = coverUrl(car);
+  img.alt = "";
+  img.loading = "lazy";
+  const flag = document.createElement("span");
+  flag.className = "car-flag" + (car.isNew ? " is-new" : "");
+  flag.textContent = car.isNew ? "Neuf" : "Occasion";
+  photo.append(img, flag);
+
+  const body = document.createElement("div");
+  body.className = "car-body";
+  const cat = document.createElement("p");
+  cat.className = "car-cat";
+  cat.textContent = carCategory(car);
+  const title = document.createElement("h3");
+  const link = document.createElement("a");
+  link.className = "card-link";
+  link.href = url;
+  link.textContent = car.name;
+  title.append(link);
+  const desc = document.createElement("p");
+  desc.className = "car-desc";
+  desc.textContent = carDesc(car);
+
+  const foot = document.createElement("div");
+  foot.className = "car-foot";
+  const priceBox = document.createElement("div");
+  const price = document.createElement("p");
+  price.className = "car-price";
+  price.textContent = formatPriceOrAsk(car.price);
+  priceBox.append(price);
+  const btn = document.createElement("a");
+  btn.className = "btn btn-outline";
+  btn.href = url;
+  btn.textContent = "Voir détails";
+  btn.setAttribute("aria-label", `Voir les détails de ${car.name}`);
+  foot.append(priceBox, btn);
+
+  body.append(cat, title, desc, foot);
+  article.append(photo, body);
+  return article;
 }

@@ -14,67 +14,7 @@ const conditionSelect = document.getElementById("filter-condition");
 const sortSelect = document.getElementById("sort");
 const count = document.getElementById("result-count");
 
-// Mensualité indicative sur 60 mois avec 10 % d'apport et un taux annuel de 4,9 %
-function monthlyEstimate(price) {
-  const loan = price * 0.9;
-  const r = 0.049 / 12;
-  const n = 60;
-  return (loan * r) / (1 - Math.pow(1 + r, -n));
-}
-
-function createCarCard(car) {
-  const article = document.createElement("article");
-  article.className = "car-card";
-
-  const img = document.createElement("img");
-  img.src = coverUrl(car);
-  img.alt = `${car.name}, ${typeLabels[car.type].toLowerCase()}`;
-  img.loading = "lazy";
-
-  const body = document.createElement("div");
-  body.className = "car-body";
-
-  const title = document.createElement("h3");
-  const titleLink = document.createElement("a");
-  titleLink.href = `vehicule.html?id=${encodeURIComponent(car.id)}`;
-  titleLink.textContent = car.name;
-  titleLink.className = "card-link";
-  title.append(titleLink);
-
-  const meta = document.createElement("div");
-  meta.className = "car-meta";
-  const tags = [
-    car.isNew ? "Neuf" : "Occasion",
-    typeLabels[car.type],
-    car.energy,
-    car.km === 0 ? "0 km" : `${car.km.toLocaleString("fr-FR")} km`,
-    String(car.year),
-  ];
-  tags.forEach((label, i) => {
-    const tag = document.createElement("span");
-    tag.className = "tag" + (i === 0 && car.isNew ? " tag-new" : "");
-    tag.textContent = label;
-    meta.append(tag);
-  });
-
-  const price = document.createElement("p");
-  price.className = "car-price";
-  price.textContent = formatPriceOrAsk(car.price);
-
-  const month = document.createElement("p");
-  month.className = "car-month";
-  month.textContent = car.price ? `ou environ ${formatPrice(monthlyEstimate(car.price))} / mois*` : "Contactez-nous pour un devis";
-
-  const link = document.createElement("a");
-  link.className = "btn btn-dark";
-  link.href = `vehicule.html?id=${encodeURIComponent(car.id)}`;
-  link.textContent = "Voir la fiche";
-  link.setAttribute("aria-label", `Voir la fiche de ${car.name}`);
-
-  body.append(title, meta, price, month, link);
-  article.append(img, body);
-  return article;
-}
+// La carte est construite par renderCarCard() (js/vehicules.js)
 
 function render() {
   const type = typeSelect.value;
@@ -101,7 +41,7 @@ function render() {
     empty.textContent = "Aucun véhicule ne correspond à ces critères. Essayez d'augmenter le budget.";
     grid.replaceChildren(empty);
   } else {
-    grid.replaceChildren(...list.map(createCarCard));
+    grid.replaceChildren(...list.map(renderCarCard));
   }
 }
 

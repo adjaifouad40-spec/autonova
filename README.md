@@ -66,6 +66,9 @@ images/              illustrations SVG
 spec.md              spécifications détaillées
 ```
 
+## 🎨 Design
+Style minimaliste et premium : fond beige `#F5F5F0`, texte noir `#111111` et **une seule couleur d'accent**, le rouge `#E31E24`. Police **DM Sans**, hébergée dans `fonts/` (licence OFL). Les surtitres sont en majuscules espacées précédées d'un point rouge, les titres très gras et serrés, avec le dernier mot en rouge. Un badge jaune façon post-it est posé sur la photo du hero. La page [`variantes-hero.html`](variantes-hero.html) présente 3 variantes du hero de l'accueil.
+
 ## 🔧 Technologies
 HTML5 sémantique · CSS3 (variables, Flexbox, Grid, media queries) · JavaScript ES6 · GitHub Pages
 
