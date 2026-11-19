@@ -17,12 +17,21 @@ Projet de fin de formation (Lab Phase « Marketing Website ») — GOMYCODE, *In
 | Garantie & livraison | `garantie-livraison.html` | Contrôle en 120 points, tableau des garanties, étapes de livraison, FAQ |
 | Inscription | `inscription.html` | Landing page avec offre de bienvenue et formulaire d'inscription validé en JavaScript |
 | Contact | `contact.html` | Formulaire de contact validé et coordonnées |
+| Fiche véhicule | `vehicule.html?id=…` | Badge **Neuf** ou **Occasion**, photos, vidéo, prix, chiffres clés, historique (occasion) ou garantie (neuf), caractéristiques rangées par thème |
+| Espace vendeur | `espace-vendeur.html` | Ajouter, modifier, supprimer ou exporter une fiche, avec photos et vidéo depuis le téléphone ou l'ordinateur |
 
 ## ✅ Les 3 phases du projet
 
 1. **Squelette du site** : une page d'accueil avec photographie et vue d'ensemble, et des pages de fonctionnalités liées depuis l'accueil (Catalogue, Financement, Reprise, Garantie & livraison).
 2. **Page d'inscription** : une landing page qui pousse à s'inscrire avec un formulaire (`inscription.html`).
 3. **Composant Contact** : une page de contact avec formulaire. Un bandeau d'appel à l'action « Contactez-nous » figure **en bas de toutes les pages sauf la page Contact**.
+
+## 🚘 Fiches véhicules et Espace vendeur
+- **Une fiche par voiture**, avec des caractéristiques rangées en 5 thèmes : moteur et performances · boîte et transmission · consommation et autonomie · carrosserie et dimensions · châssis, roues et freinage. Les chiffres clés (puissance, 0–100 km/h, consommation, boîte) sont mis en avant.
+- **Neuf ou occasion** : un badge différent, et des champs différents (neuf : garantie, délai, finitions, couleurs ; occasion : année, kilométrage, propriétaires, entretien, contrôle technique, état).
+- **Coller une fiche technique** : on colle le nom puis une ligne « Caractéristique | Donnée » par caractéristique. Chaque valeur est placée dans le bon champ, et les lignes inconnues vont dans « Autres caractéristiques ».
+- **Photos (10 max.) et vidéo (150 Mo max.)** avec aperçu. Sur téléphone, on peut utiliser l'appareil photo ou la galerie.
+- **Stockage** : IndexedDB, dans le navigateur. Limite : les fiches ajoutées ne sont visibles que sur l'appareil où elles ont été créées. Pour publier une fiche pour tous, le bouton « Exporter » donne le texte à coller dans `js/vehicules.js`.
 
 ## ✨ Fonctionnalités JavaScript
 - Menu mobile (bouton ☰), et apparition des sections au défilement (`IntersectionObserver`)
@@ -42,10 +51,14 @@ cd autonova
 ## 🗂️ Structure
 ```
 index.html, catalogue.html, financement.html, reprise.html,
-garantie-livraison.html, inscription.html, contact.html
+garantie-livraison.html, inscription.html, contact.html,
+vehicule.html, espace-vendeur.html
 css/style.css        styles communs (variables, grilles, responsive)
 js/main.js           menu mobile, animations, format des prix
-js/catalogue.js      données et filtres du catalogue
+js/vehicules.js      données des véhicules, thèmes, stockage IndexedDB, lecture d'une fiche collée
+js/catalogue.js      filtres et tri du catalogue
+js/fiche.js          page fiche véhicule
+js/vendeur.js        Espace vendeur
 js/financement.js    simulateur de crédit
 js/reprise.js        estimation de reprise
 js/forms.js          validation des formulaires
@@ -60,16 +73,20 @@ HTML5 sémantique · CSS3 (variables, Flexbox, Grid, media queries) · JavaScrip
 Lien « Aller au contenu », `aria-current` sur la page active, `label` reliés à chaque champ, messages d'erreur sous les champs, focus visible, animations désactivées si `prefers-reduced-motion` est activé.
 
 ## ⚠️ À savoir
-- AutoNova, ses véhicules, ses prix et ses coordonnées sont **fictifs**.
+- AutoNova et ses coordonnées sont **fictifs**. Les modèles « Nova » et leurs prix sont fictifs ; la fiche Dongfeng Aeolus Mage reprend des données publiées, indicatives.
 - Le site est statique : les formulaires sont validés puis affichent une confirmation, mais **aucune donnée n'est envoyée**.
 - Les images sont des illustrations SVG. Pour mettre de vraies photos, remplacez les fichiers dans `images/`.
 
 🔍 Voir les spécifications détaillées dans [spec.md](./spec.md).
 
 ## 📸 Captures
-| Accueil | Catalogue | Mobile |
+| Accueil | Catalogue | Fiche véhicule |
 |---|---|---|
-| ![accueil](captures/accueil.png) | ![catalogue](captures/catalogue.png) | ![mobile](captures/mobile-accueil.png) |
+| ![accueil](captures/accueil.png) | ![catalogue](captures/catalogue.png) | ![fiche](captures/fiche-neuf.png) |
+
+| Espace vendeur | Fiche avec photos | Mobile |
+|---|---|---|
+| ![vendeur](captures/espace-vendeur.png) | ![photos](captures/fiche-avec-photos.png) | ![mobile](captures/mobile-fiche.png) |
 
 ## 📄 Licence
 MIT

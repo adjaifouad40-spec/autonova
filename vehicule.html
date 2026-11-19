@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fiche détaillée d'un véhicule AutoNova : photos, vidéo, prix et caractéristiques techniques.">
+  <title>Fiche véhicule — AutoNova</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <nav class="container navbar" aria-label="Navigation principale">
+      <a href="index.html" class="logo">Auto<span>Nova</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="catalogue.html">Catalogue</a></li>
+        <li><a href="financement.html">Financement</a></li>
+        <li><a href="reprise.html">Reprise</a></li>
+        <li><a href="garantie-livraison.html">Garantie & livraison</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="inscription.html" class="nav-cta">S'inscrire</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenu">
+    <div id="fiche" aria-live="polite">
+      <section class="section"><div class="container"><p class="empty">Chargement de la fiche…</p></div></section>
+    </div>
+  </main>
+
+  <!-- Appel à l'action : présent sur toutes les pages sauf Contact -->
+  <section class="cta-band" aria-labelledby="cta-title">
+    <div class="container">
+      <div>
+        <h2 id="cta-title">Une question sur un véhicule ?</h2>
+        <p>Nos conseillers vous répondent sous 24 h, sans engagement.</p>
+      </div>
+      <a class="btn" href="contact.html">Contactez-nous</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="logo">Auto<span>Nova</span></a>
+          <p>Voitures neuves et d'occasion récentes, achetées en ligne et livrées chez vous.</p>
+        </div>
+        <div>
+          <h3>Nos services</h3>
+          <ul>
+            <li><a href="catalogue.html">Catalogue</a></li>
+            <li><a href="financement.html">Financement</a></li>
+            <li><a href="reprise.html">Reprise</a></li>
+            <li><a href="garantie-livraison.html">Garantie &amp; livraison</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>AutoNova</h3>
+          <ul>
+            <li><a href="inscription.html">S'inscrire aux offres</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="espace-vendeur.html">Espace vendeur</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-bottom">© <span id="year">2026</span> AutoNova — marque fictive, projet de fin de formation GOMYCODE.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/vehicules.js"></script>
+  <script src="js/fiche.js"></script>
+</body>
+</html>

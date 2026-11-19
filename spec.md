@@ -63,7 +63,15 @@ Le catalogue compte 8 véhicules. Les types sont `citadine`, `berline`, `suv` et
 ## 8. Responsive
 Les points de rupture sont 900 px (colonnes empilées), 760 px (menu mobile, formulaires sur une colonne) et 480 px (boutons pleine largeur). Les grilles utilisent `repeat(auto-fit, minmax(250px, 1fr))`.
 
-## 9. Limites connues et suites possibles
+## 9. Fiches véhicules et Espace vendeur
+- **Modèle de données** : `{ id, name, brand, type, energy, isNew, year, km, price, image, specs: [[libellé, valeur]], details: [[libellé, valeur]], photos?: File[], video?: File }`. Un `price` à `null` s'affiche « Prix sur demande ».
+- **Thèmes** (`SPEC_GROUPS`) : chaque libellé connu (`SPEC_FIELDS`) appartient à un thème. Les libellés inconnus sont rattachés par mots-clés (coffre → carrosserie, autonomie → consommation), sinon ils vont dans « Autres caractéristiques ».
+- **Neuf / occasion** : `NEW_FIELDS` ou `USED_FIELDS`. Les champs de l'autre état sont masqués et désactivés.
+- **Lecture d'une fiche collée** (`parseSpecSheet`) : une ligne seule donne le nom ; ensuite les séparateurs acceptés sont la tabulation, `:`, `|` ou 2 espaces ; la ligne d'en-tête « Caractéristique » est ignorée.
+- **Stockage** : IndexedDB (`autonova` / `vehicules`), qui accepte les fichiers image et vidéo. Les fiches locales sont fusionnées avec `STATIC_VEHICLES` dans le catalogue et les fiches.
+- **Validation** : nom et catégorie obligatoires ; pour l'occasion, année (1980 à l'année en cours) et kilométrage obligatoires ; 10 photos de 15 Mo maximum, 1 vidéo de 150 Mo maximum.
+
+## 10. Limites connues et suites possibles
 - Aucun serveur : les formulaires ne sont pas envoyés. On pourrait les brancher sur un service comme Formspree.
-- Données statiques : on pourrait les charger depuis un fichier JSON ou une API.
+- Les fiches de l'Espace vendeur restent dans le navigateur : pour un vrai partage entre appareils, il faudrait un service en ligne (Firebase, Supabase) avec une connexion sécurisée.
 - Illustrations SVG à remplacer par de vraies photos.

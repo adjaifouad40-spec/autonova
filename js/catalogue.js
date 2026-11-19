@@ -2,18 +2,9 @@
 //  Catalogue : données des véhicules + filtres dynamiques
 // =========================================================
 
-const cars = [
-  { name: "Nova City", type: "citadine", energy: "Essence", year: 2025, km: 0, price: 15990, image: "citadine-bleue.svg", isNew: true },
-  { name: "Nova City Sun", type: "citadine", energy: "Hybride", year: 2024, km: 12000, price: 13490, image: "citadine-jaune.svg", isNew: false },
-  { name: "Nova Line", type: "berline", energy: "Diesel", year: 2023, km: 34000, price: 21900, image: "berline-grise.svg", isNew: false },
-  { name: "Nova Line Pure", type: "berline", energy: "Hybride", year: 2025, km: 0, price: 29990, image: "berline-blanche.svg", isNew: true },
-  { name: "Nova Trek", type: "suv", energy: "Hybride", year: 2025, km: 0, price: 34500, image: "suv-rouge.svg", isNew: true },
-  { name: "Nova Trek Black", type: "suv", energy: "Diesel", year: 2022, km: 51000, price: 24900, image: "suv-noir.svg", isNew: false },
-  { name: "Nova E", type: "electrique", energy: "Électrique", year: 2025, km: 0, price: 31900, image: "electrique-verte.svg", isNew: true },
-  { name: "Nova E Long Range", type: "electrique", energy: "Électrique", year: 2024, km: 9000, price: 36900, image: "electrique-bleue.svg", isNew: false },
-];
-
-const typeLabels = { citadine: "Citadine", berline: "Berline", suv: "SUV", electrique: "Électrique" };
+// Les véhicules viennent de js/vehicules.js (site + Espace vendeur)
+let cars = [];
+const typeLabels = TYPE_LABELS;
 
 const grid = document.getElementById("car-grid");
 const typeSelect = document.getElementById("filter-type");
@@ -36,7 +27,7 @@ function createCarCard(car) {
   article.className = "car-card";
 
   const img = document.createElement("img");
-  img.src = `images/${car.image}`;
+  img.src = coverUrl(car);
   img.alt = `${car.name}, ${typeLabels[car.type].toLowerCase()}`;
   img.loading = "lazy";
 
@@ -44,7 +35,11 @@ function createCarCard(car) {
   body.className = "car-body";
 
   const title = document.createElement("h3");
-  title.textContent = car.name;
+  const titleLink = document.createElement("a");
+  titleLink.href = `vehicule.html?id=${encodeURIComponent(car.id)}`;
+  titleLink.textContent = car.name;
+  titleLink.className = "card-link";
+  title.append(titleLink);
 
   const meta = document.createElement("div");
   meta.className = "car-meta";
@@ -64,16 +59,17 @@ function createCarCard(car) {
 
   const price = document.createElement("p");
   price.className = "car-price";
-  price.textContent = formatPrice(car.price);
+  price.textContent = formatPriceOrAsk(car.price);
 
   const month = document.createElement("p");
   month.className = "car-month";
-  month.textContent = `ou environ ${formatPrice(monthlyEstimate(car.price))} / mois*`;
+  month.textContent = car.price ? `ou environ ${formatPrice(monthlyEstimate(car.price))} / mois*` : "Contactez-nous pour un devis";
 
   const link = document.createElement("a");
   link.className = "btn btn-dark";
-  link.href = `inscription.html?modele=${encodeURIComponent(car.name)}`;
-  link.textContent = "Réserver un essai";
+  link.href = `vehicule.html?id=${encodeURIComponent(car.id)}`;
+  link.textContent = "Voir la fiche";
+  link.setAttribute("aria-label", `Voir la fiche de ${car.name}`);
 
   body.append(title, meta, price, month, link);
   article.append(img, body);
@@ -87,12 +83,13 @@ function render() {
 
   let list = cars.filter((car) =>
     (type === "all" || car.type === type) &&
-    car.price <= maxPrice &&
+    (car.price === null || car.price <= maxPrice) &&
     (condition === "all" || (condition === "neuf" ? car.isNew : !car.isNew))
   );
 
-  if (sortSelect.value === "price-asc") list.sort((a, b) => a.price - b.price);
-  if (sortSelect.value === "price-desc") list.sort((a, b) => b.price - a.price);
+  const p = (c, empty) => (c.price === null ? empty : c.price);
+  if (sortSelect.value === "price-asc") list.sort((a, b) => p(a, Infinity) - p(b, Infinity));
+  if (sortSelect.value === "price-desc") list.sort((a, b) => p(b, -Infinity) - p(a, -Infinity));
   if (sortSelect.value === "year") list.sort((a, b) => b.year - a.year);
 
   priceOutput.textContent = formatPrice(maxPrice);
@@ -113,4 +110,14 @@ const params = new URLSearchParams(window.location.search);
 if (params.get("type") && typeLabels[params.get("type")]) typeSelect.value = params.get("type");
 
 [typeSelect, priceRange, conditionSelect, sortSelect].forEach((el) => el.addEventListener("input", render));
-render();
+getAllVehicles().then((list) => {
+  cars = list;
+  // Le curseur de budget s'adapte au véhicule le plus cher
+  const maxPrice = Math.max(40000, ...cars.map((c) => c.price || 0));
+  const step = maxPrice > 200000 ? 100000 : 500;
+  priceRange.max = Math.ceil(maxPrice / step) * step;
+  priceRange.min = 0;
+  priceRange.step = step;
+  priceRange.value = priceRange.max;
+  render();
+});
